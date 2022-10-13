@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_forecasting_app/controller/state/weather_result_state.dart';
-import 'package:weather_forecasting_app/view/result_screen.dart';
-import '../controller/component/primary_button.dart';
-import '../controller/component/primary_spacer.dart';
-import '../controller/constant/color.dart';
+import 'package:weather_forecasting_app/view/result/result_screen.dart';
+import '../../controller/component/primary_button.dart';
+import '../../controller/component/primary_spacer.dart';
+import '../../controller/constant/color.dart';
 
 
 
@@ -67,17 +67,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       const PrimaryVerticalSpacer(),
                       PrimaryButton(
                         onTap: () {
-                          setState(() {
-                            _isLoading = true;
-                          });
-                            Future.delayed(const Duration(milliseconds: 1000), () {
-                              Get.to(()=> ResultScreen());
-                              stateController.loadWeatherData();
-                              stateController.getDate();
-                              _isLoading = false;
-                            });
+                          stateController.loadWeatherData();
+                          stateController.getDate();
+                          Get.to(()=> ResultScreen());
                         },
-                    isLoading:  _isLoading,
                       ),
                     ],
                   ),

@@ -5,13 +5,11 @@ import '../constant/color.dart';
 class PrimaryButton extends StatelessWidget {
   final VoidCallback onTap;
   final String buttonTitle;
-  final bool isLoading;
 
   const PrimaryButton(
       {Key? key,
       required this.onTap,
-      this.buttonTitle = 'Search',
-        required this.isLoading})
+      this.buttonTitle = 'Search',})
       : super(key: key);
 
   @override
@@ -34,12 +32,7 @@ class PrimaryButton extends StatelessWidget {
             ),
           ],
         ),
-        child: isLoading == true
-            ? SizedBox(
-           height: 25,
-            width: 25,
-            child: CircularProgressIndicator(color: assColor.withOpacity(0.5)))
-            : Text(
+        child: Text(
                 buttonTitle,
                 style: const TextStyle(
                     color: assColor, fontSize: 25, fontWeight: FontWeight.w900),
