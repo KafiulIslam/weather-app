@@ -153,17 +153,22 @@ class _ResultScreenState extends State<ResultScreen> {
       child: Column(
          mainAxisSize: MainAxisSize.min,
         children: [
-          InfoRow(data1: 'Max: ${stateController.max.toStringAsFixed(2)}',data2: 'Min: ${ stateController.min.toStringAsFixed(2)}',),
-          Expanded(child: Divider(color: stateController.isDarkMode == true ? darkModeDeepColor : lightModeDeepColor, height: 0.5,)),
-          InfoRow(data1: 'Pressure: ${ stateController.pressure.toStringAsFixed(2)}',data2: 'Humidity: ${ stateController.humidity.toStringAsFixed(2)}',),
-          Expanded(child: Divider(color: stateController.isDarkMode == true ? darkModeDeepColor : lightModeDeepColor, height: 0.5,)),
-          InfoRow(data1: 'Wind Speed: ${ stateController.windSpeed.toStringAsFixed(2)}',data2: 'Wind deg: ${ stateController.windDeg.toStringAsFixed(2)}',),
-          Expanded(child: Divider(color: stateController.isDarkMode == true ? darkModeDeepColor : lightModeDeepColor, height: 0.5,)),
-          InfoRow(data1: 'Rain: ${ stateController.rain.toStringAsFixed(2)}',data2: 'Clouds: ${ stateController.cloud.toStringAsFixed(2)}',),
-          Expanded(child: Divider(color: stateController.isDarkMode == true ? darkModeDeepColor : lightModeDeepColor, height: 0.5,)),
-          InfoRow(data1: 'Base',data2:  stateController.base,),
-      ],),
+          InfoRow(data1: 'Max Temperature',data2: stateController.max.toStringAsFixed(2),),
+          _divider(context),
+          InfoRow(data1: 'Min Temperature',data2: stateController.min.toStringAsFixed(2),),
+          _divider(context),
+          InfoRow(data1: 'Pressure',data2: stateController.pressure.toStringAsFixed(2),),
+          _divider(context),
+          InfoRow(data1: 'Humidity',data2: stateController.humidity.toStringAsFixed(2),),
+          _divider(context),
+          InfoRow(data1: 'Wind Speed',data2: stateController.windSpeed.toStringAsFixed(2),),
+         ],),
     );
+ }
+
+ Widget _divider(BuildContext context){
+    return Expanded(child: Divider(color: stateController.isDarkMode == true ? darkModeDeepColor : lightModeDeepColor, height: 0.5,));
+
  }
 
 }
