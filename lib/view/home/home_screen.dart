@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:weather_forecasting_app/controller/component/loader.dart';
 import 'package:weather_forecasting_app/controller/state/weather_result_state.dart';
 import 'package:weather_forecasting_app/view/result/result_screen.dart';
 import '../../controller/component/primary_button.dart';
@@ -23,6 +24,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
    WeatherResultState stateController = Get.put(WeatherResultState());
+   late bool _isLoading = false;
    late String currentLocation = '';
    late TextEditingController locationController = TextEditingController(text: currentLocation);
 
@@ -54,15 +56,19 @@ class _HomeScreenState extends State<HomeScreen> {
        position.longitude,
      );
      setState(() {
-       currentLocation = placemarks[0].locality ?? '';
+       currentLocation = placemarks[0].locality ?? 'New York';
      });
      return await Geolocator.getCurrentPosition(desiredAccuracy:LocationAccuracy.low);
+
    }
+
+
 
    @override
   void initState() {
     super.initState();
-    _determinePosition();
+     _determinePosition();
+
   }
 
 
@@ -81,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Padding(
                 padding:
                 const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
-                child: SingleChildScrollView(
-                  child: currentLocation == '' ? Center(child: CircularProgressIndicator(color: Colors.white.withOpacity(0.5),)) : Column(
+                child: currentLocation == '' ? Loader() : SingleChildScrollView(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       _buildToggleButton(context),

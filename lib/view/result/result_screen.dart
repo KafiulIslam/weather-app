@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:weather_forecasting_app/view/result/result_widget/info_row.dart';
+import '../../controller/component/loader.dart';
 import '../../controller/component/primary_button.dart';
 import '../../controller/component/primary_spacer.dart';
 import '../../controller/constant/color.dart';
@@ -44,9 +45,7 @@ class _ResultScreenState extends State<ResultScreen> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
-                child: stateController.temperature == null
-                    ? Center(child: CircularProgressIndicator(color: Colors.white.withOpacity(0.5),))
-                    : Column(
+                child: stateController.temperature == 0.0 ? Loader() : Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           _buildToggleSwitch(context),
