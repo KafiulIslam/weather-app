@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,7 +23,49 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
    WeatherResultState stateController = Get.put(WeatherResultState());
-   late bool _isLoading = false;
+   late String currentLocation = '';
+   late TextEditingController locationController = TextEditingController(text: currentLocation);
+
+   Future<Position> _determinePosition() async {
+     bool serviceEnabled;
+     LocationPermission permission;
+
+     serviceEnabled = await Geolocator.isLocationServiceEnabled();
+     if (!serviceEnabled) {
+       return Future.error('Location services are disabled.');
+     }
+
+     permission = await Geolocator.checkPermission();
+     if (permission == LocationPermission.denied) {
+       permission = await Geolocator.requestPermission();
+       if (permission == LocationPermission.denied) {
+         return Future.error('Location permissions are denied');
+       }
+     }
+
+     if (permission == LocationPermission.deniedForever) {
+       return Future.error(
+           'Location permissions are permanently denied, we cannot request permissions.');
+     }
+
+     final position = await Geolocator.getCurrentPosition(desiredAccuracy:LocationAccuracy.low);
+     List<Placemark> placemarks = await placemarkFromCoordinates(
+       position.latitude,
+       position.longitude,
+     );
+     setState(() {
+       currentLocation = placemarks[0].locality ?? '';
+     });
+     return await Geolocator.getCurrentPosition(desiredAccuracy:LocationAccuracy.low);
+   }
+
+   @override
+  void initState() {
+    super.initState();
+    _determinePosition();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding:
                 const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
                 child: SingleChildScrollView(
-                  child: Column(
+                  child: currentLocation == '' ? Center(child: CircularProgressIndicator(color: Colors.white.withOpacity(0.5),)) : Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       _buildToggleButton(context),
@@ -67,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const PrimaryVerticalSpacer(),
                       PrimaryButton(
                         onTap: () {
-                          stateController.loadWeatherData();
+                          stateController.loadWeatherData(locationController.text);
                           stateController.getDate();
                           Get.to(()=> ResultScreen());
                         },
@@ -83,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Widget _searchBar(BuildContext context) {
       return TextFormField(
-        controller: stateController.locationController,
+        controller: locationController,
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
@@ -137,4 +181,5 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     ],);
   }
+
 }

@@ -11,16 +11,16 @@ import '../../controller/constant/typography.dart';
 import '../../controller/services/weather_api_client.dart';
 import '../../controller/state/weather_result_state.dart';
 
-
 class ResultScreen extends StatefulWidget {
-  ResultScreen({Key? key,}) : super(key: key);
+  ResultScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
 }
 
 class _ResultScreenState extends State<ResultScreen> {
-
   WeatherResultState stateController = Get.find();
 
   @override
@@ -35,27 +35,25 @@ class _ResultScreenState extends State<ResultScreen> {
         body: SingleChildScrollView(
           child: GetBuilder<WeatherResultState>(builder: (_) {
             return Container(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height,
+              height: MediaQuery.of(context).size.height,
               width: double.infinity,
               decoration: BoxDecoration(
-                gradient: stateController.isDarkMode == true
-                    ? darkMode
-                    : lightMode,
+                gradient:
+                    stateController.isDarkMode == true ? darkMode : lightMode,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 32, vertical: 32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                   children: [
-                    _buildToggleSwitch(context),
-                     _tempResult(context),
-                    _glassCard(context),
-                  ],
-                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
+                child: stateController.temperature == null
+                    ? Center(child: CircularProgressIndicator(color: Colors.white.withOpacity(0.5),))
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _buildToggleSwitch(context),
+                          _tempResult(context),
+                          _glassCard(context),
+                        ],
+                      ),
               ),
             );
           }),
@@ -68,10 +66,15 @@ class _ResultScreenState extends State<ResultScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(onPressed: () {
-          Get.back();
-        },
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 25,)),
+        IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: 25,
+            )),
         FlutterSwitch(
           width: 55.0,
           height: 25.0,
@@ -95,36 +98,47 @@ class _ResultScreenState extends State<ResultScreen> {
             stateController.modeToggle();
           },
         ),
-      ],);
+      ],
+    );
   }
 
   Widget _tempResult(BuildContext context) {
-    return Column(children: [
-      Image.asset('assets/images/cloud.png', height: MediaQuery
-          .of(context)
-          .size
-          .height / 4,
-          width: MediaQuery
-              .of(context)
-              .size
-              .height / 2,),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(stateController.temperature.toStringAsFixed(2),
-            style: header1,),
-          const Padding(
-            padding: EdgeInsets.only(left: 4.0, bottom: 32),
-            child: Text('o', style: sixteenWhiteStyle,),
-          )
-        ],),
-      Text( stateController.location, style: header2,),
-      Text(
-        stateController.dateTime, style: sixteenWhiteStyle,),
-    ],);
+    return Column(
+      children: [
+        Image.asset(
+          'assets/images/cloud.png',
+          height: MediaQuery.of(context).size.height / 4,
+          width: MediaQuery.of(context).size.height / 2,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              stateController.temperature.toStringAsFixed(2),
+              style: header1,
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 4.0, bottom: 32),
+              child: Text(
+                'o',
+                style: sixteenWhiteStyle,
+              ),
+            )
+          ],
+        ),
+        Text(
+          stateController.location,
+          style: header2,
+        ),
+        Text(
+          stateController.dateTime,
+          style: sixteenWhiteStyle,
+        ),
+      ],
+    );
   }
 
- Widget _glassCard(BuildContext context) {
+  Widget _glassCard(BuildContext context) {
     return GlassmorphicFlexContainer(
       borderRadius: 20,
       blur: 20,
@@ -151,24 +165,45 @@ class _ResultScreenState extends State<ResultScreen> {
         ],
       ),
       child: Column(
-         mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          InfoRow(data1: 'Max Temperature',data2: stateController.max.toStringAsFixed(2),),
+          InfoRow(
+            data1: 'Max Temperature',
+            data2: stateController.max.toStringAsFixed(2),
+          ),
           _divider(context),
-          InfoRow(data1: 'Min Temperature',data2: stateController.min.toStringAsFixed(2),),
+          InfoRow(
+            data1: 'Min Temperature',
+            data2: stateController.min.toStringAsFixed(2),
+          ),
           _divider(context),
-          InfoRow(data1: 'Pressure',data2: stateController.pressure.toStringAsFixed(2),),
+          InfoRow(
+            data1: 'Pressure',
+            data2: stateController.pressure.toStringAsFixed(2),
+          ),
           _divider(context),
-          InfoRow(data1: 'Humidity',data2: stateController.humidity.toStringAsFixed(2),),
+          InfoRow(
+            data1: 'Humidity',
+            data2: stateController.humidity.toStringAsFixed(2),
+          ),
           _divider(context),
-          InfoRow(data1: 'Wind Speed',data2: stateController.windSpeed.toStringAsFixed(2),),
-         ],),
+          InfoRow(
+            data1: 'Wind Speed',
+            data2: stateController.windSpeed.toStringAsFixed(2),
+          ),
+        ],
+      ),
     );
- }
+  }
 
- Widget _divider(BuildContext context){
-    return Expanded(child: Divider(color: stateController.isDarkMode == true ? darkModeDeepColor : lightModeDeepColor, height: 0.5,));
-
- }
+  Widget _divider(BuildContext context) {
+    return Expanded(
+        child: Divider(
+      color: stateController.isDarkMode == true
+          ? darkModeDeepColor
+          : lightModeDeepColor,
+      height: 0.5,
+    ));
+  }
 
 }

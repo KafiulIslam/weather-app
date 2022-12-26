@@ -5,7 +5,7 @@ import '../services/weather_api_client.dart';
 
 class WeatherResultState extends GetxController{
 
-  TextEditingController locationController = TextEditingController();
+ // TextEditingController locationController = TextEditingController();
 
   bool _isDarkMode = true;
   bool get isDarkMode => _isDarkMode;
@@ -61,8 +61,8 @@ class WeatherResultState extends GetxController{
       String get base => _base;
 
 
-  Future<void> loadWeatherData() async {
-    var weatherData = await getWeatherInfo(locationController.text);
+  Future<void> loadWeatherData(String location) async {
+    var weatherData = await getWeatherInfo(location);
            _location = weatherData['data']['name'];
            _temperature = weatherData['data']['main']['temp'] - 273.15;
            _max = weatherData['data']['main']['temp_max'] - 273.15;
@@ -74,7 +74,6 @@ class WeatherResultState extends GetxController{
            // _rain = weatherData['data']['rain']['1h'] ?? 0;
            _cloud = weatherData['data']['clouds']['all'];
            _base = weatherData['data']['base'];
-           print('load function is working $weatherData');
            update();
   }
 
