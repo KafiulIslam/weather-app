@@ -63,6 +63,7 @@ class WeatherResultState extends GetxController{
 
   Future<void> loadWeatherData(String location) async {
     var weatherData = await getWeatherInfo(location);
+    print('weather result $weatherData');
            _location = weatherData['data']['name'];
            _temperature = weatherData['data']['main']['temp'] - 273.15 ?? 0.00;
            _max = weatherData['data']['main']['temp_max'] - 273.15;
