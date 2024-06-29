@@ -43,11 +43,11 @@ Map<String, dynamic> getServerErrorResponse(e) {
 }
 
 Map<String, dynamic> getErrorResponse(e) {
-  if (e.type == DioErrorType.response) {
+  if (e.type == DioErrorType.badResponse) {
     return getServerErrorResponse(e);
   }
 
-  if (e.type == DioErrorType.connectTimeout) {
+  if (e.type == DioErrorType.connectionTimeout) {
     return getConnectionErrorResponse();
   }
 

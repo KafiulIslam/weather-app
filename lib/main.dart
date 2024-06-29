@@ -1,11 +1,13 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:weather_forecasting_app/controller/constant/color.dart';
 import 'package:weather_forecasting_app/view/home/home_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   runApp(const MyApp());
 }
 

@@ -1,17 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_forecasting_app/controller/component/loader.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:weather_forecasting_app/controller/state/weather_result_state.dart';
 import 'package:weather_forecasting_app/view/result/result_screen.dart';
 import '../../controller/component/primary_button.dart';
 import '../../controller/component/primary_spacer.dart';
 import '../../controller/constant/color.dart';
+import '../../controller/services/ad_helper.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -23,48 +22,133 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   WeatherResultState stateController = Get.put(WeatherResultState());
   late bool _isLoading = false;
-  late String currentLocation = '';
+ // late Position currentPosition;
   late TextEditingController locationController =
       TextEditingController();
 
-  // Future<Position> _determinePosition() async {
-  //   bool serviceEnabled;
-  //   LocationPermission permission;
-  //
-  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  //   if (!serviceEnabled) {
-  //     return Future.error('Location services are disabled.');
-  //   }
-  //
-  //   permission = await Geolocator.checkPermission();
-  //   if (permission == LocationPermission.denied) {
-  //     permission = await Geolocator.requestPermission();
-  //     if (permission == LocationPermission.denied) {
-  //       return Future.error('Location permissions are denied');
+  // Future<void> locationPermissionHandler() async {
+  //   if (await Permission.location.serviceStatus.isEnabled) {
+  //     PermissionStatus status = await Permission.location.status;
+  //     if (status.isGranted) {
+  //       Position position = await Geolocator.getCurrentPosition();
+  //       setState(() {
+  //         currentPosition = position;
+  //       });
+  //       // setState(() {
+  //       //   currentPosition = LatLng(position.latitude, position.longitude);
+  //       // });
+  //     } else if (status.isDenied) {
+  //       PermissionStatus permissionStatus =
+  //       await Permission.locationWhenInUse.request();
+  //       locationPermissionHandler();
   //     }
+  //   } else {
+  //     PermissionStatus permissionStatus =
+  //     await Permission.locationWhenInUse.request();
+  //     locationPermissionHandler();
   //   }
-  //
-  //   if (permission == LocationPermission.deniedForever) {
-  //     return Future.error(
-  //         'Location permissions are permanently denied, we cannot request permissions.');
-  //   }
-  //
-  //   final position = await Geolocator.getCurrentPosition(desiredAccuracy:LocationAccuracy.low);
-  //   List<Placemark> placemarks = await placemarkFromCoordinates(
-  //     position.latitude,
-  //     position.longitude,
-  //   );
-  //   setState(() {
-  //     currentLocation = placemarks[0].locality ?? 'New York';
-  //   });
-  //   return await Geolocator.getCurrentPosition(desiredAccuracy:LocationAccuracy.low);
-  //
   // }
+  //
+  // void getPlacemarks(double lat, double long, bool isMarker) async {
+  //   try {
+  //     setState(() {
+  //       isAddressDetailsLoading = true;
+  //     });
+  //
+  //     List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+  //
+  //     var address = '';
+  //
+  //     if (placemarks.isNotEmpty) {
+  //       var streets = placemarks.reversed
+  //           .map((placemark) => placemark.street)
+  //           .where((street) => street != null);
+  //
+  //       streets = streets.where((street) =>
+  //       street!.toLowerCase() !=
+  //           placemarks.reversed.last.locality!
+  //               .toLowerCase()); // Remove city names
+  //       streets = streets
+  //           .where((street) => !street!.contains('+')); // Remove street codes
+  //
+  //       address += streets.join(', ');
+  //
+  //       //address += ', ${placemarks.reversed.last.subLocality ?? ''}';
+  //       //address += ', ${placemarks.reversed.last.locality ?? ''}';
+  //       address += ' ${placemarks.reversed.last.subAdministrativeArea ?? ''}';
+  //       address += ', ${placemarks.reversed.last.administrativeArea ?? ''}';
+  //       //address += ', ${placemarks.reversed.last.postalCode ?? ''}';
+  //       address += ', ${placemarks.reversed.last.country ?? ''}';
+  //     }
+  //
+  //     if (!isMarker) {
+  //       return null;
+  //     } else {
+  //       setState(() {
+  //         _searchController.text = address;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     CustomSnack.warningSnack(e.toString());
+  //   } finally {
+  //     setState(() {
+  //       isAddressDetailsLoading = false;
+  //     });
+  //   }
+  // }
+
+
+  /// google add ///
+
+  InterstitialAd? _interstitialAd;
+  late int _interstitialLoadAttempts = 0;
+
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      // adUnitId: "ca-app-pub-3940256099942544/8691691433",
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialLoadAttempts = 0;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          _interstitialLoadAttempts++;
+          _interstitialAd = null;
+          if (_interstitialLoadAttempts <= 3) {
+            _createInterstitialAd();
+          }
+        },
+      ),
+    );
+  }
+
+  void _showInterstitialAd() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          ad.dispose();
+          _createInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          ad.dispose();
+          _createInterstitialAd();
+        },
+      );
+      _interstitialAd!.show();
+    }
+  }
 
   @override
   void initState() {
-    super.initState();
-    // _determinePosition();
+    _createInterstitialAd();
+  }
+
+  @override
+  void dispose() {
+    _interstitialAd?.dispose();
+    super.dispose();
   }
 
   @override
@@ -113,6 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .loadWeatherData(locationController.text);
                             stateController.getDate();
                             Get.to(() => ResultScreen());
+                            _showInterstitialAd();
                           },
                         ),
                       ],
