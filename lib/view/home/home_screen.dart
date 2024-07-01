@@ -154,58 +154,63 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(body: GetBuilder<WeatherResultState>(builder: (_) {
-        return Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: stateController.isDarkMode == true ? darkMode : lightMode,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
-            child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        _buildToggleButton(context),
-                        const PrimaryVerticalSpacer(),
-                        _searchBar(context),
-                        const PrimaryVerticalSpacer(),
-                        Container(
-                          height: 200,
-                          width: 200,
-                          decoration: const BoxDecoration(
-                              image: DecorationImage(
-                            image: AssetImage(
-                                'assets/images/cloudwithquestion.png'),
-                            fit: BoxFit.cover,
-                          )),
-                        ),
-                        Text(
-                          'Enter Your Location',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.lobster(
-                              textStyle: const TextStyle(
-                                  fontSize: 60,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700)),
-                        ),
-                        const PrimaryVerticalSpacer(),
-                        PrimaryButton(
-                          onTap: () {
-                            stateController
-                                .loadWeatherData(locationController.text);
-                            stateController.getDate();
-                            Get.to(() => ResultScreen());
-                            _showInterstitialAd();
-                          },
-                        ),
-                      ],
+      child: GestureDetector(
+        onTap: (){
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(body: GetBuilder<WeatherResultState>(builder: (_) {
+          return Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: stateController.isDarkMode == true ? darkMode : lightMode,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
+              child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _buildToggleButton(context),
+                          const PrimaryVerticalSpacer(),
+                          _searchBar(context),
+                          const PrimaryVerticalSpacer(),
+                          Container(
+                            height: 200,
+                            width: 200,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                              image: AssetImage(
+                                  'assets/images/cloudwithquestion.png'),
+                              fit: BoxFit.cover,
+                            )),
+                          ),
+                          Text(
+                            'Enter Your Location',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.lobster(
+                                textStyle: const TextStyle(
+                                    fontSize: 60,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700)),
+                          ),
+                          const PrimaryVerticalSpacer(),
+                          PrimaryButton(
+                            onTap: () {
+                              stateController
+                                  .loadWeatherData(locationController.text);
+                              stateController.getDate();
+                              Get.to(() => ResultScreen());
+                              _showInterstitialAd();
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-          ),
-        );
-      })),
+            ),
+          );
+        })),
+      ),
     );
   }
 

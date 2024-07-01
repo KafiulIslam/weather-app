@@ -29,7 +29,7 @@ class _ResultScreenState extends State<ResultScreen> {
       child: Scaffold(
         body: GetBuilder<WeatherResultState>(builder: (_) {
           return Container(
-           // height: MediaQuery.of(context).size.height,
+            // height: MediaQuery.of(context).size.height,
             width: double.infinity,
             decoration: BoxDecoration(
               gradient:
@@ -37,7 +37,9 @@ class _ResultScreenState extends State<ResultScreen> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: stateController.temperature == 0.0 ? Loader() : Column(
+              child: stateController.isDataLoading
+                  ? Loader()
+                  : Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         _buildToggleSwitch(context),
@@ -156,7 +158,7 @@ class _ResultScreenState extends State<ResultScreen> {
       ),
       child: SingleChildScrollView(
         child: Column(
-         // mainAxisSize: MainAxisSize.min,
+          // mainAxisSize: MainAxisSize.min,
           children: [
             InfoRow(
               data1: 'Max Temperature',
@@ -190,11 +192,10 @@ class _ResultScreenState extends State<ResultScreen> {
 
   Widget _divider(BuildContext context) {
     return Divider(
-          color: stateController.isDarkMode == true
-      ? darkModeDeepColor
-      : lightModeDeepColor,
-          height: 1,
-        );
+      color: stateController.isDarkMode == true
+          ? darkModeDeepColor
+          : lightModeDeepColor,
+      height: 1,
+    );
   }
-
 }

@@ -16,9 +16,9 @@ class AdHelper {
 
   static String get interstitialAdUnitId {
     if (Platform.isAndroid) {
-        //String realInterstitialAdUnit = "ca-app-pub-6871786334119508/4180224480";
-         String defaultInterstitialAdUnit = "ca-app-pub-3940256099942544/1033173712";
-      return defaultInterstitialAdUnit;
+        String realInterstitialAdUnit = "ca-app-pub-6871786334119508/4180224480";
+         //String defaultInterstitialAdUnit = "ca-app-pub-3940256099942544/1033173712";
+      return realInterstitialAdUnit;
     } else if (Platform.isIOS) {
       return "ca-app-pub-3940256099942544/4411468910";
     } else {

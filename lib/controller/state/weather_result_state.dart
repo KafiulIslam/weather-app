@@ -61,21 +61,33 @@ class WeatherResultState extends GetxController{
       String get base => _base;
 
 
+      late bool _isDataLoading = false;
+      bool get isDataLoading => _isDataLoading;
   Future<void> loadWeatherData(String location) async {
-    var weatherData = await getWeatherInfo(location);
-    print('weather result $weatherData');
-           _location = weatherData['data']['name'];
-           _temperature = weatherData['data']['main']['temp'] - 273.15 ?? 0.00;
-           _max = weatherData['data']['main']['temp_max'] - 273.15;
-           _min = weatherData['data']['main']['temp_min'] - 273.15;
-           _pressure = weatherData['data']['main']['pressure'];
-           _humidity = weatherData['data']['main']['humidity'];
-           _windSpeed = weatherData['data']['wind']['speed'];
-           _windDeg = weatherData['data']['wind']['deg'];
-           // _rain = weatherData['data']['rain']['1h'] ?? 0;
-           _cloud = weatherData['data']['clouds']['all'];
-           _base = weatherData['data']['base'];
-           update();
+   try{
+     _isDataLoading = true;
+     update();
+
+     var weatherData = await getWeatherInfo(location);
+     _location = weatherData['data']['name'];
+     _temperature = weatherData['data']['main']['temp'] - 273.15 ?? 0.00;
+     _max = weatherData['data']['main']['temp_max'] - 273.15;
+     _min = weatherData['data']['main']['temp_min'] - 273.15;
+     _pressure = weatherData['data']['main']['pressure'];
+     _humidity = weatherData['data']['main']['humidity'];
+     _windSpeed = weatherData['data']['wind']['speed'];
+     _windDeg = weatherData['data']['wind']['deg'];
+     // _rain = weatherData['data']['rain']['1h'] ?? 0;
+     _cloud = weatherData['data']['clouds']['all'];
+     _base = weatherData['data']['base'];
+     update();
+   }catch(e){
+     print(e);
+   }finally{
+     _isDataLoading = false;
+     update();
+   }
+
   }
 
 
