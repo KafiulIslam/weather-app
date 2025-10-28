@@ -3,12 +3,10 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:glassmorphism/glassmorphism.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:weather_forecasting_app/view/result/result_widget/info_row.dart';
 import '../../controller/component/loader.dart';
 import '../../controller/constant/color.dart';
 import '../../controller/constant/typography.dart';
-import '../../controller/services/ad_helper.dart';
 import '../../controller/state/weather_result_state.dart';
 
 class ResultScreen extends StatefulWidget {
@@ -27,13 +25,13 @@ class _ResultScreenState extends State<ResultScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+         
         body: GetBuilder<WeatherResultState>(builder: (_) {
           return Container(
             // height: MediaQuery.of(context).size.height,
             width: double.infinity,
             decoration: BoxDecoration(
-              gradient:
-                  stateController.isDarkMode == true ? darkMode : lightMode,
+              gradient: stateController.isDarkMode == true ? darkMode : lightMode,
             ),
             child: Padding(
               padding: const EdgeInsets.all(16),

@@ -9,14 +9,19 @@ class WeatherResultState extends GetxController{
 
   bool _isDarkMode = true;
   bool get isDarkMode => _isDarkMode;
-  void modeToggle (){
-      _isDarkMode = !_isDarkMode;
-      var index = 0;
-      if (!_isDarkMode) {
-        index = 1;
-      }
-      update();
-   }
+  void modeToggle() {
+    _isDarkMode = !_isDarkMode;
+    update();
+  }
+
+  // void modeToggle (){
+  //     _isDarkMode = !_isDarkMode;
+  //     var index = 0;
+  //     if (!_isDarkMode) {
+  //       index = 1;
+  //     }
+  //     update();
+  //  }
 
 
     String dateTime = '';

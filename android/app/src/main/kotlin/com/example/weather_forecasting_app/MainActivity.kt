@@ -1,4 +1,4 @@
-package com.example.weather_forecasting_app
+package com.weather.check.app
 
 import io.flutter.embedding.android.FlutterActivity
 
