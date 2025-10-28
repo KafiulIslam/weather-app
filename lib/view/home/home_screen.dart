@@ -20,11 +20,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   WeatherResultState stateController = Get.put(WeatherResultState());
-  late bool _isLoading = false;
 
   // late Position currentPosition;
   late TextEditingController locationController = TextEditingController();
-
 
   /// google add ///
 
@@ -146,6 +144,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _searchBar(BuildContext context) {
     return TextFormField(
       controller: locationController,
+      onFieldSubmitted: (value) {
+        stateController.loadWeatherData(locationController.text);
+        stateController.getDate();
+        Get.to(() => ResultScreen());
+        _showInterstitialAd();
+      },
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,

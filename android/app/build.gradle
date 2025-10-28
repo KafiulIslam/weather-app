@@ -40,8 +40,8 @@ android {
         applicationId "com.weather.check.app"
         minSdkVersion 29
         targetSdkVersion 36
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 5
+        versionName "4.0.2"
     }
 
     compileOptions {
